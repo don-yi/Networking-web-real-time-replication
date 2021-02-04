@@ -4,6 +4,7 @@ const usrCreate = require('./usr-create.js');		// new usr
 const login = require('./usr-login.js');				// login
 const usrById = require('./usr-by-id.js');			// retrieve usr by id
 const usrByName = require('./usr-by-name.js');	// search usr by name
+const usrUpdate = require('./usr-update.js');		// update
 
 // const var
 const app = express();
@@ -25,3 +26,5 @@ app.post(path + 'login', login);
 app.get(path + 'users/:id', usrById);
 // search for a usr by name w/ GET on users
 app.get(path + 'users', usrByName);
+// update usr by id w/ PUT on users/:id
+app.put(path + 'users/:id', usrUpdate);
