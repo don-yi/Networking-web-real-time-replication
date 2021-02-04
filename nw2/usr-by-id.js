@@ -2,7 +2,6 @@
 const usrman = require('./usr-manager.js');
 
 module.exports = (req, res) => {
-  // get session from req, id from param, and matching session-id
   var session = req.body.session;
   var id = req.params.id;
   var matchingSessionId = usrman.GetMatchingSessionId(session);

@@ -3,8 +3,6 @@ const usrman = require('./usr-manager.js');
 const util = require('./util.js');
 
 module.exports = (req, res) => {
-  // get session from req, uname from query, id from uname,
-  // and matching session-id
   var uname = req.query.username;
   // err w/ no uname
   if (!uname) { res.sendStatus(400); return; }
