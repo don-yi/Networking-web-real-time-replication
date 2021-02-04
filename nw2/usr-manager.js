@@ -42,18 +42,22 @@ class UserManager {
     return sessionObj;
   };
 
+  // get matching session
+  GetMatchingSessionId = (session) => {
+    return this.allSession.find((sessionId) => {
+      if (sessionId.session === session) return sessionId;
+    });
+  };
+
   // retrieve usr obj from container depends on whether owner / non owner
   RetrieveUsr = (id, session) => {
-    // get matched session
-    var matchedSession = this.allSession.find((elem) => {
-      if (elem.session === session) return elem.session;
-    });
-
+    // get mathcing session
+    var matchingSession = this.GetMatchingSessionId(session);
     // get usr from usr container
     var usr = this.allUsr.find((usr) => { if (usr.id === id) return usr; });
 
     // verify owner and return
-    return matchedSession.id === id ? usr : {
+    return matchingSession.id === id ? usr : {
       id:       usr.id,
       username: usr.username,
       avatar:   usr.avatar
@@ -63,9 +67,10 @@ class UserManager {
 
 const usrman = new UserManager();
 module.exports = {
-  UsrFound:       usrman.UsrFound,
-  CreateUsr:      usrman.CreateUsr,
-  IsBadPw:        usrman.IsBadPw,
-  CreateSession:  usrman.CreateSession,
-  RetrieveUsr:    usrman.RetrieveUsr
+  UsrFound:             usrman.UsrFound,
+  CreateUsr:            usrman.CreateUsr,
+  IsBadPw:              usrman.IsBadPw,
+  CreateSession:        usrman.CreateSession,
+  GetMatchingSessionId: usrman.GetMatchingSessionId,
+  RetrieveUsr:          usrman.RetrieveUsr
 };

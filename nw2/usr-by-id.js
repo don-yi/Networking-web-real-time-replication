@@ -2,26 +2,16 @@
 const usrman = require('./usr-manager.js');
 
 module.exports = (req, res) => {
-  // Authenticated: Yes
-  // Request Body: none
-  // Response Body:
-  // •	id (the user ID)
-  // •	username
-  // •	password (only if the user is the same as the owner of the session)
-  // •	avatar
-  // Retrieves the specified user by ID (the generated value).
-  // The password is only provided if the user requested is the same as
-  // the owner of the session.
-  // The other fields are accessible for any user by any user.
+  // get session req
+  var session = req.body.session;
+  var id = req.params.id;
+  var matchingSessionId = usrman.GetMatchingSessionId(session);
 
-  // err w/ no session
-  if (!req.body.session) {
-    res.sendStatus(401);
-    return;
-  }
+  // err w/ no/bad/old session
+  if (!session || !matchingSessionId) { res.sendStatus(401); return; }
 
 	// retrieve usr info
-	var retrievedUsr = usrman.RetrieveUsr(req.params.id, req.body.session);
+	var retrievedUsr = usrman.RetrieveUsr(id, session);
 	// res w/ json & success status
   res.status(200).json(retrievedUsr);
 };
