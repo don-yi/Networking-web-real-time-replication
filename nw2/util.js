@@ -12,6 +12,6 @@ class Util {
 
 const util = new Util();
 module.exports = {
-  GenId: util.GenId,
+  GenId:      util.GenId,
   GenSession: util.GenSession
 };
