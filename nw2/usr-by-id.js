@@ -9,6 +9,8 @@ module.exports = (req, res) => {
 
   // err w/ no/bad/old session
   if (!session || !matchingSessionId) { res.sendStatus(401); return; }
+  // bad id
+  if (!usrman.UsrFound(id)) { res.sendStatus(404); return; };
 
 	// retrieve usr info
 	var retrievedUsr = usrman.RetrieveUsr(id, session);
