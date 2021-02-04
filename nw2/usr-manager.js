@@ -7,8 +7,9 @@ class UserManager {
 
   // find usr in container
   UsrFound = (id) => {
-    for (const usr of this.allUsr) if (usr.id == id) return true;
-    return false;
+    return this.allUsr.find((usr) => {
+      return (usr.id === id) ? true : false;
+    });
   };
 
   // gen new usr obj and push to container
@@ -25,14 +26,10 @@ class UserManager {
 
   // check pw match
   IsBadPw = (json) => {
-    for (const usr of this.allUsr) {
-      if (usr.username == json.username) {
-        if (usr.password != json.password) {
-          return true;
-        };
-        return false;
-      };
-    };
+    return this.allUsr.find((usr) => {
+      if (usr.username === json.username)
+        return (usr.password != json.password) ? true : false;
+    });
   };
 
   // create new session
@@ -47,16 +44,19 @@ class UserManager {
 
   // retrieve usr obj from container depends on whether owner / non owner
   RetrieveUsr = (id, session) => {
-    for (const usr of this.allUsr) if (usr.id == id) {
-      var isOwner = this.allSession.find((elem) => {
-        if (elem.session === session) return elem.session;
-      });
+    // get matched session
+    var matchedSession = this.allSession.find((elem) => {
+      if (elem.session === session) return elem.session;
+    });
 
-      return isOwner.id === id ? usr : {
-        id:       usr.id,
-        username: usr.username,
-        avatar:   usr.avatar
-      };
+    // get usr from usr container
+    var usr = this.allUsr.find((usr) => { if (usr.id === id) return usr; });
+
+    // verify owner and return
+    return matchedSession.id === id ? usr : {
+      id:       usr.id,
+      username: usr.username,
+      avatar:   usr.avatar
     };
   };
 };
