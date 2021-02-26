@@ -14,7 +14,7 @@ module.exports = (req, res) => {
   // err w/ no/bad session
   if (!session || !matchingSessionId) { res.sendStatus(401); return; }
   // err w/ bad uname
-  if (!usrman.UsrFound(id)) { res.sendStatus(404); return; };
+  if (!usrman.IsUsrFound(id)) { res.sendStatus(404); return; };
 
 	// retrieve usr info
 	var retrievedUsr = usrman.RetrieveUsr(id, session);
