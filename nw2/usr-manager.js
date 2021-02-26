@@ -1,8 +1,8 @@
 const util = require('./util.js');
 
 class UserManager {
-  // container
-  allUsr = [];
+  // // container
+  // allUsr = [];
   allSession = [];
 
   /**
@@ -11,7 +11,7 @@ class UserManager {
    * @param  {string} id User ID to find in user container.
    * @return  {boolean} True if found, false otherwise.
    */
-  UsrFound = (id) => this.allUsr.find((usr) => {
+  IsUsrFound = (id) => this.allUsr.find((usr) => {
     return (usr.id === id) ? true : false;
   });
 
@@ -22,14 +22,13 @@ class UserManager {
    * @param  {object} uinfo User info.
    * @return  {object} New user object created in container.
    */
-  CreateUsr = (id, uinfo) => {
+  CreateNewUsrObj = (id, uinfo) => {
     const newUsr = {
       id: id,
       username: uinfo.username,
       password: uinfo.password,
       avatar:   uinfo.avatar
     };
-    this.allUsr.push(newUsr);
     return newUsr;
   };
 
@@ -119,8 +118,8 @@ class UserManager {
 
 const usrman = new UserManager();
 module.exports = {
-  UsrFound:             usrman.UsrFound,
-  CreateUsr:            usrman.CreateUsr,
+  IsUsrFound:           usrman.IsUsrFound,
+  CreateNewUsrObj:      usrman.CreateNewUsrObj,
   IsBadPw:              usrman.IsBadPw,
   CreateSession:        usrman.CreateSession,
   GetMatchingSessionId: usrman.GetMatchingSessionId,
