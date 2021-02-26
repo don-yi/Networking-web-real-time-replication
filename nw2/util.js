@@ -21,6 +21,7 @@ class Util {
 
 const util = new Util();
 module.exports = {
-  GenId:      util.GenId,
-  GenSession: util.GenSession
+	PATH:				'/api/v1/',				// default path
+  GenId:			util.GenId,
+  GenSession:	util.GenSession,
 };
