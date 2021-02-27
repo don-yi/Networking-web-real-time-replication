@@ -38,7 +38,7 @@ mongoCli.connect( connectionString, mongoOptions, (err, mongoCli) => {
 	// search for a usr by name w/ GET on users
 	usrByName(app, usrCollection, redisCli);
 	// update usr by id w/ PUT on users/:id
-	app.put(path + 'users/:id', usrUpdate);
+	usrUpdate(app, usrCollection, redisCli);
 });
 
 // listening
