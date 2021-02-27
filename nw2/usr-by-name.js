@@ -1,23 +1,35 @@
 // require
-const usrman = require('./usr-manager.js');
 const util = require('./util.js');
 
-module.exports = (req, res) => {
-  var uname = req.query.username;
-  // err w/ no uname
-  if (!uname) { res.sendStatus(400); return; }
+module.exports = (app, usrCollection, redisCli) => {
+	app.get(util.PATH + 'users', (req, res) => {
+    var unameToRetrieve = req.query.username;
+    // err w/ no uname
+    if (!unameToRetrieve) { res.sendStatus(400); return; }
 
-  var session = req.body.session;
-  var id = util.GenId(uname);
-  var matchingSessionId = usrman.GetMatchingSessionId(session);
+    var session = req.body.session;
 
-  // err w/ no/bad session
-  if (!session || !matchingSessionId) { res.sendStatus(401); return; }
-  // err w/ bad uname
-  if (!usrman.IsUsrFound(id)) { res.sendStatus(404); return; };
+    // err w/ no session
+    if (!session) { res.sendStatus(401); return; }
 
-	// retrieve usr info
-	var retrievedUsr = usrman.RetrieveUsr(id, session);
-	// res w/ json & success status
-  res.status(200).json(retrievedUsr);
+    var sessionKey = `sessions:${session}`;
+    redisCli.get(sessionKey, (err, retrieverId) => {
+      // err w/ bad session
+      if (!retrieverId) { res.sendStatus(401); return; }
+
+      queryWithUname = { username : unameToRetrieve };
+      usrCollection.findOne(queryWithUname, (err, usrObj) => {
+        // err w/ bad uname
+        if (!usrObj) { res.sendStatus(404); return; };
+
+        // verify owner and res w/ json & success status
+        var idToRetrieve = util.GenId(unameToRetrieve);
+        res.status(200).json(retrieverId === idToRetrieve ? usrObj : {
+          id:       usrObj.id,
+          username: usrObj.username,
+          avatar:   usrObj.avatar
+        });
+      });
+    });
+  });
 };
