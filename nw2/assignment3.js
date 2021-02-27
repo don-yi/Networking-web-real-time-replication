@@ -12,7 +12,6 @@ const usrUpdate = require('./usr-update.js');		// update
 // const var
 const app = express();
 const port = 3100;
-const path = '/api/v1/';
 
 redisCli.on('error', (err) => { console.error(err); })
 app.use(express.json());	// expr to parse json
