@@ -1,8 +1,9 @@
-// require
+// pkg
 const express = require('express');
 const mongoCli = require('mongodb').MongoClient;
 const redisCli = require('redis').createClient(6379, '127.0.0.1');
 
+// import
 const usrCreate = require('./usr-create.js');		// new usr
 const login = require('./usr-login.js');				// login
 const usrById = require('./usr-by-id.js');			// retrieve usr by id

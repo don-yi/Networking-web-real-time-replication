@@ -1,4 +1,4 @@
-// require
+// import
 const util = require('./util.js');
 
 module.exports = (app, usrCollection, redisCli) => {
