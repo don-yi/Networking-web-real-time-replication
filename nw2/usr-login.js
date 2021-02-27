@@ -27,12 +27,11 @@ module.exports = (app, usrCollection, redisCli) => {
 
 				// successful Login should remove any previous sessions for that user
 				// get old session from lookup & del
-				redisCli.get(`sessionsIdsByUserId:${uid}`, (err, reply) => {
-					if (reply) {
-						redisCli.del(reply);
-					}
+				var lookupKey = `sessionsIdsByUserId:${uid}`;
+				redisCli.get(lookupKey, (err, reply) => {
+					redisCli.del(reply);
 				});
-				redisCli.set(`sessionsIdsByUserId:${uid}`, sessionKey);
+				redisCli.set(lookupKey, sessionKey);
 
 				// res w/ success status & session
 				res.status(200).json({ session : session });
