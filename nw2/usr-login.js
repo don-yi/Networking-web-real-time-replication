@@ -21,11 +21,8 @@ module.exports = (app, usrCollection, redisCli) => {
 			var sessionKey = `sessions:${session}`;
 			var uid = util.GenId(uname);
 			redisCli.set(sessionKey, uid, (err, reply) => {
-				// err status
-				if (err) {
-					res.sendStatus(400); return;
-				};
-				if (req.body.expire) redisCli.expire(key, 10);
+				// session expire after 10s
+				redisCli.expire(sessionKey, 10);
 
 				// successful Login should remove any previous sessions for that user
 				// get old session from lookup & del
