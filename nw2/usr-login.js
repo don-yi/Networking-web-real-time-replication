@@ -9,7 +9,9 @@ module.exports = (app, usrCollection, redisCli) => {
     var query = { username : uname };
 		usrCollection.findOne(query, (err, result) => {
 			// err status: bad usrname
-			if (!result) { res.sendStatus(400); return; }
+			if (!result) {
+				res.sendStatus(400); return;
+			}
 			// err status: bad pw
 			if (result.password !== req.body.password) {
 				 res.sendStatus(403); return; 
@@ -29,7 +31,9 @@ module.exports = (app, usrCollection, redisCli) => {
 				// get old session from lookup & del
 				var lookupKey = `sessionsIdsByUserId:${uid}`;
 				redisCli.get(lookupKey, (err, reply) => {
-					redisCli.del(reply);
+					if (reply) {
+						redisCli.del(reply);
+					}
 				});
 				redisCli.set(lookupKey, sessionKey);
 
