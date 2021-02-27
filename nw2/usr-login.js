@@ -16,12 +16,24 @@ module.exports = (app, usrCollection, redisCli) => {
 			}
 
 			var session = util.GenSession();
-			var key = `sessions:${session}`;
+			var sessionKey = `sessions:${session}`;
 			var uid = util.GenId(uname);
-			redisCli.hset(key, "id", uid, (err, reply) => {
+			redisCli.set(sessionKey, uid, (err, reply) => {
 				// err status
-				if (err) { res.sendStatus(400); return; }
+				if (err) {
+					res.sendStatus(400); return;
+				};
 				if (req.body.expire) redisCli.expire(key, 10);
+
+				// successful Login should remove any previous sessions for that user
+				// get old session from lookup & del
+				redisCli.get(`sessionsIdsByUserId:${uid}`, (err, reply) => {
+					if (reply) {
+						redisCli.del(reply);
+					}
+				});
+				redisCli.set(`sessionsIdsByUserId:${uid}`, sessionKey);
+
 				// res w/ success status & session
 				res.status(200).json({ session : session });
 			});
