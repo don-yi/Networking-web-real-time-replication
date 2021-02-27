@@ -1,6 +1,5 @@
 // require
 const util = require('./util.js');
-const usrman = require('./usr-manager.js');
 
 module.exports = (app, usrCollection, redisCli) => {
 	app.get(util.PATH + 'users/:id', (req, res) => {
