@@ -1,14 +1,14 @@
-// pkg
+// require
 const express = require('express');
 const mongoCli = require('mongodb').MongoClient;
 const redisCli = require('redis').createClient(6379, '127.0.0.1');
 
-// import
 const usrCreate = require('./usr-create.js');		// new usr
 const login = require('./usr-login.js');				// login
 const usrById = require('./usr-by-id.js');			// retrieve usr by id
 const usrByName = require('./usr-by-name.js');	// search usr by name
 const usrUpdate = require('./usr-update.js');		// update
+const connect = require('./connect.js');				// connect
 
 // const var
 const app = express();
@@ -39,6 +39,8 @@ mongoCli.connect( connectionString, mongoOptions, (err, mongoCli) => {
 	usrByName(app, usrCollection, redisCli);
 	// update usr by id w/ PUT on users/:id
 	usrUpdate(app, usrCollection, redisCli);
+	// conn'ing to gam server w/ POST to connect/
+	connect(app, usrCollection, redisCli);
 });
 
 // listening

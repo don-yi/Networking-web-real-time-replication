@@ -1,4 +1,4 @@
-// pkg
+// require
 const base64url = require('base64url');
 const uuid4 = require('uuid4');
 

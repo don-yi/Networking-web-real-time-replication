@@ -1,4 +1,4 @@
-// import
+// require
 const util = require('./util.js');
 
 module.exports = (app, usrCollection) => {
@@ -7,11 +7,11 @@ module.exports = (app, usrCollection) => {
 		var uname = req.body.username;
 
 		// find doc by query
-    var queryWithUname = { username : uname };
-		usrCollection.findOne(queryWithUname, (err, usrObjFound) => {
+    var query = { username : uname };
+		usrCollection.findOne(query, (err, result) => {
 
 			// if dup, err status
-			if (usrObjFound) { res.sendStatus(409); return; };
+			if (result) { res.sendStatus(409); return; };
 
 			// create & ins new usr
 			var newUsr = CreateNewUsrObj(req.body);
@@ -27,7 +27,7 @@ module.exports = (app, usrCollection) => {
 /**
  * Generate new user object and push to container.
  *
- * @param  {object} uinfo User info in an object.
+ * @param  {object} uinfo User info.
  * @return  {object} New user object created in container.
  */
 function CreateNewUsrObj (uinfo) {

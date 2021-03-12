@@ -1,4 +1,4 @@
-// import
+// require
 const util = require('./util.js');
 
 module.exports = (app, usrCollection, redisCli) => {
@@ -22,15 +22,13 @@ module.exports = (app, usrCollection, redisCli) => {
         // err w/ bad uname
         if (!usrObj) { res.sendStatus(404); return; };
 
-        // verify owner
+        // verify owner and res w/ json & success status
         var idToRetrieve = util.GenId(unameToRetrieve);
-        var usrObjToReturn = retrieverId === idToRetrieve ? usrObj : {
+        res.status(200).json(retrieverId === idToRetrieve ? usrObj : {
           id:       usrObj.id,
           username: usrObj.username,
           avatar:   usrObj.avatar
-        };
-        // res w/ json & success status
-        res.status(200).json(usrObjToReturn);
+        });
       });
     });
   });
