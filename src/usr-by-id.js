@@ -11,18 +11,14 @@ module.exports = (app, usrCollection, redisCli) => {
     var sessionKey = `sessions:${session}`;
     redisCli.get(sessionKey, (err, retrieverId) => {
       // err : bad/old session
-      if (!retrieverId) {
-        res.sendStatus(401); return; 
-      };
+      if (!retrieverId) { res.sendStatus(401); return; };
 
       // find by id
       idToRetrieve = req.params.id;
       var query = { id : idToRetrieve };
       usrCollection.findOne(query, (err, usrObj) => {
         // err w/ bad id
-        if (!usrObj) {
-          res.sendStatus(404); return;          
-        }
+        if (!usrObj) { res.sendStatus(404); return; }
 
         // verify owner and res w/ json & success status
         res.status(200).json(retrieverId === idToRetrieve ? usrObj : {
