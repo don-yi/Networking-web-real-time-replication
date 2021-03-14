@@ -22,6 +22,8 @@ class Util {
 const util = new Util();
 module.exports = {
 	PATH:				'/api/v1/',				// default path
+	GAM_PORT:		4200,
+	SECRET:			'CS261S21',
   GenId:			util.GenId,
   GenSession:	util.GenSession,
 };
