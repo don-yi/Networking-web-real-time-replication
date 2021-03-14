@@ -28,14 +28,14 @@ module.exports = (app, usrCollection, redisCli) => {
 				// get old session from lookup & del
 				var lookupKey = `sessionsIdsByUserId:${uid}`;
 				redisCli.get(lookupKey, (err, reply) => {
-					if (reply) {
-						redisCli.del(reply);
-					}
+					if (reply) redisCli.del(reply);
 				});
-				redisCli.set(lookupKey, sessionKey);
-
-				// res w/ success status & session
-				res.status(200).json({ session : session });
+				redisCli.set(lookupKey, sessionKey, (err, reply) => {
+					// lookup expire after 10s
+					redisCli.expire(lookupKey, 10);
+					// res w/ success status & session
+					res.status(200).json({ session : session });
+				});
 			});
 		});
 	});
