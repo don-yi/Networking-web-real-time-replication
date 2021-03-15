@@ -16,7 +16,7 @@ class Util {
 	 *
 	 * @return  {string} Generated session.
 	 */
-	GenSession = () => { return uuid4(); };
+	GenSession = () => { return uuid4().toString() ; };
 };
 
 const util = new Util();
