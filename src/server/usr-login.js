@@ -20,7 +20,7 @@ module.exports = (app, usrCollection, redisCli) => {
 			var uid = util.GenId(uname);
 			redisCli.set(sessionKey, uid, (err, reply) => {
 				// session expire after 10s
-				// redisCli.expire(sessionKey, 10);
+				redisCli.expire(sessionKey, 10);
 
 				// successful Login should remove any previous sessions for that user
 				// get old session from lookup & del
@@ -30,7 +30,7 @@ module.exports = (app, usrCollection, redisCli) => {
 				});
 				redisCli.set(lookupKey, sessionKey, (err, reply) => {
 					// lookup expire after 10s
-					// redisCli.expire(lookupKey, 10);
+					redisCli.expire(lookupKey, 10);
 					// res w/ success status & session
 					res.status(200).json({ session : session });
 				});
