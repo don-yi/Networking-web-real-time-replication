@@ -1,0 +1,29 @@
+1) The current value of kMaxMoveHistorySize is 100; however, this is more of a history than we ever really need.  Measure the the max movement history records used at the default settings (no send interval), and enter the number here:  (5 points)
+
+<ANSWER_1>
+
+
+2) Change the host's send interval to 500 ms, and measure the the max movement history records used again, and enter the number here. (5 points)
+
+<ANSWER 2>
+
+
+3) Introduce 500ms of latency via Clumsy, using the "udp.DstPort == 4200" (additional) filter, per the lab and assignment doc.  Keep the send interval at 500ms as well.  Measure the the max movement history records used again, and enter the number here. (5 points)
+
+<ANSWER 3>
+
+
+4) **IF** you implemented the packet-drop fix, briefly describe your implementation below.  Otherwise, leave it as N/A.
+
+N/A
+
+
+5) **IF** you implemented the remote-player-snapshot fix, briefly describe your implementation below.  Otherwise, leave it as N/A.
+
+N/A
+
+
+
+
+NOTE: For #4 and #5, you must describe your implementation.  If you leave it as N/A, you will receive no credit, even if you implemented the fix!
+NOTE: You will only get credit for *either* 4 or 5, so don't waste time doing both!
