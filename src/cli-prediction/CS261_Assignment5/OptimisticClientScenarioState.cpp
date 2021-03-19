@@ -5,7 +5,7 @@
 //
 // brief:	The optimistic scenario for the client, in which the remote is the authority.
 //
-// Copyright © 2021 DigiPen, All rights reserved.
+// Copyright ?2021 DigiPen, All rights reserved.
 //---------------------------------------------------------
 #include "pch.h"
 #include "OptimisticClientScenarioState.h"
@@ -55,16 +55,23 @@ void OptimisticClientScenarioState::Update()
 	auto control_right= CP_Input_KeyDown(CP_KEY::KEY_D) == TRUE;
 	direct_local_control_.SetControls(control_up, control_down, control_left, control_right);
 
-	//TODO: retrieve last frame's control values (x and y), i.e. *before* updating
+	//TODO (att'ed): retrieve last frame's control values (x and y), i.e. *before* updating
+	float lastX = 0.0f; float lastY = 0.0f;
+  if (!hist.empty()) { lastX = hist.back().dx; lastY = hist.back().dy; }
 	direct_local_control_.Update(dt);
 	// retrieve this frame's control values (x and y), i.e. *after* updating
 	auto direct_local_x = direct_local_control_.GetCurrentX();
 	auto direct_local_y = direct_local_control_.GetCurrentY();
 	// set the player (rendered) position based on the current control location
 	local_player_.SetPosition(direct_local_x, direct_local_y);
-	//TODO: calculate the delta (x and y) between this frame and last frame
-	//TODO: push a new movement record onto the *back* of the history deque
-	//TODO: while the size of the history deque is greater than kMaxMoveHistorySize, pop entries off the *front* of the deque
+	//TODO (att'ed): calculate the delta (x and y) between this frame and last frame
+	mvRec.dx = direct_local_x - lastX;
+	mvRec.dy = direct_local_y - lastY;
+	//TODO (att'ed): push a new movement record onto the *back* of the history deque
+	mvRec.localFrame = local_frame_;
+	hist.push_back(mvRec);
+	//TODO (att'ed): while the size of the history deque is greater than kMaxMoveHistorySize, pop entries off the *front* of the deque
+	while (hist.size() > kMaxMoveHistorySize) hist.pop_front();
 
 	snapshot_remote_control_.Update(dt);
 	auto snapshot_remote_x = snapshot_remote_control_.GetCurrentX();
@@ -94,7 +101,8 @@ void OptimisticClientScenarioState::Update()
 			float host_x, host_y;
 			float non_host_x, non_host_y;
 			// CONVENTION: host writes its own values first
-			//TODO: read a u_long from the host's packet, into "last_received_local_frame"
+			//TODO (att'ed): read a u_long from the host's packet, into "last_received_local_frame"
+			PacketSerializer::ReadValue<u_long>(packet_, last_received_local_frame);
 			PacketSerializer::ReadValue<float>(packet_, host_time_between_updates);
 			PacketSerializer::ReadValue<float>(packet_, host_x);
 			PacketSerializer::ReadValue<float>(packet_, host_y);
@@ -105,14 +113,28 @@ void OptimisticClientScenarioState::Update()
 			PacketSerializer::ReadValue<float>(packet_, non_host_x);
 			PacketSerializer::ReadValue<float>(packet_, non_host_y);
 			direct_local_control_.SetLastRemotePosition(non_host_x, non_host_y); // for debug rendering
-			//TODO: find the record with the same frame as last_received_local_frame
+			//TODO (att'ed): find the record with the same frame as last_received_local_frame
 			// -- you likely should use std::find_if... see the implementation for server-rewind in OptimisticHostScenarioState.cpp for a hint on syntax!
 			// -- if the record isn't found, you should describe the problem in cerr... but this is very unlikely 
-			//TODO: advance the iterator one - we want the *next* delta
-			//TODO: while (iterator != deque.end()), accumulate the subsequent movement deltas:
-			// 1) add the record's delta (x and y) to the non_host_x and non_host_y
-			// 2) advance the iterator
-			// REMEMBER: ++ will advance iterators, you can get values from the iter using -> (i.e. iter->delta_x)
+      auto foundLocalFrameIter = std::find_if(
+        hist.begin(), hist.end(), [=](auto rec) {
+          return rec.localFrame == last_received_local_frame;
+        });
+      if (foundLocalFrameIter == std::end(hist)) {
+        std::cerr << "No frame found in record history" << std::endl;
+      } else {
+        //TODO (att): advance the iterator one - we want the *next* delta
+        std::advance(foundLocalFrameIter, 1);
+        //TODO (att): while (iterator != deque.end()), accumulate the subsequent movement deltas:
+        while (foundLocalFrameIter != hist.end()) {
+          // 1) add the record's delta (x and y) to the non_host_x and non_host_y
+					non_host_x += foundLocalFrameIter->dx;
+					non_host_y += foundLocalFrameIter->dy;
+          // 2) advance the iterator
+          // REMEMBER: ++ will advance iterators, you can get values from the iter using -> (i.e. iter->delta_x)
+          std::advance(foundLocalFrameIter, 1);
+        }
+      }
 			direct_local_control_.SetPosition(non_host_x, non_host_y);
 
 			// if there is a confirmed client attack, then process it

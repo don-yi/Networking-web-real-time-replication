@@ -5,7 +5,7 @@
 //
 // brief:	The optimistic scenario for the host, in which the local system is the authority.
 //
-// Copyright © 2021 DigiPen, All rights reserved.
+// Copyright ?2021 DigiPen, All rights reserved.
 //---------------------------------------------------------
 #include "pch.h"
 #include "OptimisticHostScenarioState.h"
@@ -123,7 +123,8 @@ void OptimisticHostScenarioState::Update()
 	{
 		packet_.Reset();
 		PacketSerializer::WriteValue<u_long>(packet_, local_frame_);
-		//TODO: write a u_long value into the host's packet, "remote_frame_", into the packet
+		//TODO (attempted): write a u_long value into the host's packet, "remote_frame_", into the packet
+		PacketSerializer::WriteValue<u_long>(packet_, remote_frame_);
 		PacketSerializer::WriteValue<float>(packet_, send_timer_secs_);
 		// CONVENTION: host writes its own values first
 		PacketSerializer::WriteValue<float>(packet_, local_control_.GetCurrentX());

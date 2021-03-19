@@ -5,7 +5,7 @@
 //
 // brief:	The optimistic scenario for the client, in which the remote is the authority.
 //
-// Copyright © 2021 DigiPen, All rights reserved.
+// Copyright ?2021 DigiPen, All rights reserved.
 //---------------------------------------------------------
 #pragma once
 #include "NetworkedScenarioState.h"
@@ -55,11 +55,16 @@ private:
     float send_timer_secs_;
     float time_since_last_recv_;
 
-    //TODO: define local movement record, containing:
-    // 1) the local frame 
-    // 2) the delta between the last frame's position and this frame's position, as x and y components
+    //TODO (attempted): define local movement record, containing:
+    struct mvRecStruct {
+      // 1) the local frame 
+      u_long localFrame;
+      // 2) the delta between the last frame's position and this frame's position, as x and y components
+      float dx, dy;
+    } mvRec;
 
-    //TODO: define a history of local movement records, as a deque of the local movement records
+    //TODO (attempted): define a history of local movement records, as a deque of the local movement records
+    std::deque<mvRecStruct> hist;
 
     Packet packet_;
 };
