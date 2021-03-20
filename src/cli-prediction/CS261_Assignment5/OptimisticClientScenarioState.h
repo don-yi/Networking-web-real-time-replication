@@ -65,6 +65,7 @@ private:
 
     //TODO (attempted): define a history of local movement records, as a deque of the local movement records
     std::deque<mvRecStruct> hist;
+    int maxNumRecUsed = 0;
 
     Packet packet_;
 };

@@ -5,7 +5,7 @@
 //
 // brief:	Calculates the position as *interpolated* from the last two known positions
 //
-// Copyright © 2021 DigiPen, All rights reserved.
+// Copyright ï¿½ 2021 DigiPen, All rights reserved.
 //---------------------------------------------------------
 #pragma once
 #include "pch.h"

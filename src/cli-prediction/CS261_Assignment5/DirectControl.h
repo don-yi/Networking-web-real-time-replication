@@ -5,7 +5,7 @@
 //
 // brief:	Updates a position based on direct player controls (pressing the four cardinal directions).
 //
-// Copyright © 2021 DigiPen, All rights reserved.
+// Copyright ?2021 DigiPen, All rights reserved.
 //---------------------------------------------------------
 #pragma once
 #include "pch.h"

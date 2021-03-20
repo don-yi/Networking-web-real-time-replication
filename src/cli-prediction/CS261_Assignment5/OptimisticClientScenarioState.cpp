@@ -56,8 +56,8 @@ void OptimisticClientScenarioState::Update()
 	direct_local_control_.SetControls(control_up, control_down, control_left, control_right);
 
 	//TODO (att'ed): retrieve last frame's control values (x and y), i.e. *before* updating
-	float lastX = 0.0f; float lastY = 0.0f;
-  if (!hist.empty()) { lastX = hist.back().dx; lastY = hist.back().dy; }
+	auto const lastX = direct_local_control_.GetCurrentX();
+	auto const lastY = direct_local_control_.GetCurrentY();
 	direct_local_control_.Update(dt);
 	// retrieve this frame's control values (x and y), i.e. *after* updating
 	auto direct_local_x = direct_local_control_.GetCurrentX();
@@ -123,6 +123,14 @@ void OptimisticClientScenarioState::Update()
       if (foundLocalFrameIter == std::end(hist)) {
         std::cerr << "No frame found in record history" << std::endl;
       } else {
+        // Measure the the max movement history records used
+        int const currNumRecUsed
+          = std::distance(foundLocalFrameIter, hist.end());
+        if (currNumRecUsed > maxNumRecUsed) {
+          maxNumRecUsed = currNumRecUsed;
+          std::cout << maxNumRecUsed << std::endl << std::endl;
+        }
+
         //TODO (att): advance the iterator one - we want the *next* delta
         std::advance(foundLocalFrameIter, 1);
         //TODO (att): while (iterator != deque.end()), accumulate the subsequent movement deltas:
